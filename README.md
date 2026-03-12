@@ -114,7 +114,6 @@
 - Point-biserial Correlation
 - การสร้าง Visualization เพื่อแสดงผลลัพธ์ (Matplotlib / Seaborn)
 
-
 #### ตารางสรุปค่าความสัมพัมธ์ของแต่ละปัจจัย เทียบกับ การเปลี่ยนงาน
 | Feature                  | Type          | Chi-square | df | p-value       | Cramer's V | N      | Point-biserial r | p-value (r)    |
 |--------------------------|---------------|-----------:|---:|--------------:|-----------:|-------:|-----------------:|---------------:|
@@ -146,6 +145,8 @@
 | 10    | last_new_job              | ระยะเวลางานล่าสุด **ไม่สัมพันธ์** กับการเปลี่ยนงาน | ระยะเวลางานล่าสุด **สัมพันธ์** กับการเปลี่ยนงาน | Point‑biserial | **ปฏิเสธ H₀** (r‑p ≈ 5.17×10⁻³²) |
 | 11    | training_hours            | ชั่วโมงฝึกอบรม **ไม่สัมพันธ์** กับการเปลี่ยนงาน  | ชั่วโมงฝึกอบรม **สัมพันธ์** กับการเปลี่ยนงาน    | Point‑biserial       | **ปฏิเสธ H₀** (p ≈ 2.82×10⁻³)|
 
+---
+
 # Feature Selection
 จากการวิเคราะห์ข้อมูลทั้งหมด ในการหาค่าความสัมพันธ์ของปัจจัยต่าง ๆ โดยใช้เครื่องมือ Chi-square และ Cramer's V สำหรับข้อมูลประเภท Categorical และ Point-biserial Correlation สำหรับข้อมูลประเภท Numeric 
 พบว่าสามารถแบ่งปัจจัยทั้งหมดออกได้เป็น 3 กลุ่ม ดังนี้
@@ -167,6 +168,165 @@
 - last_new_job มีนัยสำคัญ Point‑biserial r = −0.085
 - training_hours มีนัยสำคัญ Point‑biserial r = −0.022
 
+---
+
+# 🌐 Modeling Methodology
+## 🧠 Model Type
+ - **Supervised Learning:** ประเภท Binary Classification
+ - **Target Label:** ไม่เปลี่ยนงาน (0) และ เปลี่ยนงาน (1)
+ - **Primary Features:** company_size, company_type, city_development_index, experience, enrolled_university, relevant_experience
+ - **Secondary Features:** education_level, gender, major_discipline, last_new_job, training_hours
+
+---
+
+### 🧩 Chosen Model
+ - **Logistic Regression** เหมาะกับ Binary Classification เพราะตีความง่าย และรองรับการปรับ Class Weight
+ - **SVM** แยก boundary ของ class แบบชัดเจน ทำงานได้ดีในข้อมูลที่ feature interaction มีความซับซ้อน และรองรับการปรับ Class Weight
+
+---
+
+### 🧮 Encoding
+```python 
+# 1. company_type
+dataset['company_type'] = dataset['company_type'].map({
+    'unknown':0,
+    'Other':1,
+    'NGO':2,
+    'Public Sector':3,
+    'Early Stage Startup':4,
+    'Funded Startup':5,
+    'Pvt Ltd':6 })
+
+ # 2. enrolled_university
+dataset['enrolled_university'] = dataset['enrolled_university'].map({
+    'unknown': 0,
+    'no_enrollment': 1,
+    'Part time course': 2,
+    'Full time course': 3 })
+
+# 3. relevent_experience
+dataset['relevent_experience'] = dataset['relevent_experience'].map({
+    'No relevent experience':0,
+    'Has relevent experience':1 })
+
+# 4. education_level
+dataset['education_level'] = dataset['education_level'].map({
+    'unknown':0,
+    'Primary School':1,
+    'High School':2,
+    'Graduate':3,
+    'Masters':4,
+    'Phd':5 })
+
+# 5. gender
+dataset['gender'] = dataset['gender'].map({
+    'unknown': 0,
+    'Male': 1,
+    'Female': 2,
+    'Other': 3 })
+
+# 6. major_discipline
+dataset['major_discipline'] = dataset['major_discipline'].map({
+    'unknown':0,
+    'STEM':1,
+    'Business Degree':2,
+    'Arts':3,
+    'Humanities':4,
+    'No Major':4,
+    'Other':6 })
+```
+---
+
+### ✂️ Train/Test Split
+ ```python
+from sklearn.model_selection import train_test_split
+X = dataset.drop('target', axis=1)
+y = dataset['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y,test_size=0.2,random_state=42)
+```
+- ขนาดชุด Train: (15326, 11)
+- ขนาดชุด Test : (3832, 11)
+
+---
+
+### ⚖️ Scaling
+```python
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+```
+
+---
+
+**🤖 Model: Logistic Regression**
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import LogisticRegression
+param_grid = {
+    'penalty': ['l1','l2'],
+    'solver': ['liblinear']}
+model = GridSearchCV(
+    LogisticRegression(max_iter=1000, class_weight='balanced'), param_grid, cv=5, scoring='f1')
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+y_prob = model.predict_proba(X_test_scaled)[:,1]
+```
+---
+
+**🔢Confusion Matrix**
+```python
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.show()
+```
+
+---
+
+**📊 Classification Report**
+```python
+from sklearn.metrics import classification_report
+print(classification_report(y_test, y_pred))
+```
+|    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
+|--------------|:-----------:|:--------:|:----------:|:---------:|
+| ไม่เปลี่ยนงาน   | 0.88      | 0.72  | 0.79     | 2880     |
+| เปลี่ยนงาน     | 0.45      | 0.71   | 0.55     | 952     |
+| Accuracy     |           |        | **0.72**     | 3832    |
+| Macro Avg    | 0.67      | 0.71   | 0.67     | 3832    |
+| Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
+
+**💾 Support:** จำนวนตัวอย่างในแต่ละคลาส
+- ไม่เปลี่ยนงาน (0) = 2880 (%)
+- เปลี่ยนงาน (1) = 952 (%)
+- รวม = 3832
+
+**🔥 Accuracy:** สัดส่วนของการทำนายถูกทั้งหมด
+- 0.76 → โมเดลทำนายถูกต้อง 76% ของข้อมูลทั้งหมด (5748 ตัวอย่าง)
+
+**✅ Precision** (สัดส่วนของการทำนายคลาสนั้นที่ถูกต้องจริง):
+- ไม่เปลี่ยนงาน(0): 0.87 → ในกลุ่มที่โมเดลทำนายว่า **“สูง”** มี 87% ที่ถูกต้องจริง
+- เปลี่ยนงาน(1): 0.92 → ในกลุ่มที่ทำนายว่า **“ต่ำ”** มี 92% ที่ถูกต้องจริง
+
+**🔍 Recall** (ในกลุ่มที่เป็นคลาสนั้นจริง โมเดลจับได้ครบแค่ไหน)
+- ไม่เปลี่ยนงาน(0): 0.75 → โมเดลจับได้ 75% ของกลุ่มสูงจริง
+- เปลี่ยนงาน(1): 0.96 → โมเดลจับได้ 96% ของกลุ่มต่ำจริง
+
+**⚖️ F1-Score:** (ค่ากลางระหว่าง Precision และ Recall)
+- ไม่เปลี่ยนงาน(0): 0.81 → ปานกลาง (เพราะ Recall ต่ำกว่า Precision)
+- เปลี่ยนงาน(1): 
+
+
+
+
+Accuracy: 0.7627000695894224
+Precision: 0.5619469026548672
+Recall: 0.26312154696132595
+F1 Score: 0.3584195672624647
+ROC AUC: 0.754389053064371
 
 
 
