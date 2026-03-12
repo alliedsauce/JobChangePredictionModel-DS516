@@ -284,6 +284,8 @@ disp.plot()
 plt.show()
 ```
 
+![Confusion Matrix](Material/CM-LR.jpg)
+
 ---
 
 **📊 Classification Report**
