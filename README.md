@@ -1,2 +1,44 @@
-# JobChangePredictionModel-DS516
-This repository contains a complete Exploratory Data Analysis (EDA) and Machine Learning workflow for predicting whether an individual is likely to change jobs based on personal, educational, professional, and company‑level attributes.
+# Job Change Prediction Model
+โปรเจกต์นี้เป็นการวิเคราะห์ข้อมูลเชิงสำรวจ (Exploratory Data Analysis: EDA) และสร้างโมเดล Machine Learning สำหรับการทำนายการเปลี่ยนงานของพนักงาน (JobChange Prediction)
+โดยใช้ข้อมูลเชิงบุคคล ระดับการศึกษา ประสบการณ์ทำงาน ประเภทบริษัท ไปจนถึงข้อมูลเชิงพื้นที่ เช่น ดัชนีพัฒนาเมือง
+
+---
+
+## 🧠 **Background**
+- ชุดข้อมูลประกอบไปด้วย
+  - ข้อมูลการย้ายงานของพนักงาน รวมถึงปัจจัยต่าง ๆ ทั้งหมด 19,158 record
+  - ตัวแปรเป้าหมาย คือ JobChange (0 = ไม่เปลี่ยนงาน, 1 = เปลี่ยนงาน) 
+  - พบว่ามี class imbalance ของ JobChange อย่างชัดเจน ดังนี้ 0 = 75.07% และ 1 = 24.93%
+  - ปัจจัยด้านต่าง ๆ เช่น ระดับการศึกษา (education_level) ประสบการณ์ทำงาน (experience) ความสอดคล้องของงานกับประสบการณ์ (relevent_experience) เป็นต้น
+  - Data Sources ข้อมูลจาก [www.kaggle.com](https://www.kaggle.com/datasets/arashnic/hr-analytics-job-change-of-data-scientists)
+
+---
+
+## 🧠 **Problem Statement**
+องค์กรจำนวนมากประสบปัญหาการเปลี่ยนงานของพนักงาน (Job Change / Turnover) ซึ่งส่งผลให้เกิดต้นทุนด้านการสรรหา การอบรม และสูญเสียผลผลิตอย่างมีนัยสำคัญ
+การคาดการณ์ความเป็นไปได้ที่พนักงานจะเปลี่ยนงานล่วงหน้าจึงเป็นสิ่งสำคัญต่อการวางแผนด้านทรัพยากรบุคคลและกลยุทธ์การรักษาพนักงาน (Retention Strategy)
+
+---
+
+## 🎯 **Objectives/SMART Objectives**
+**Objectives**
+1. ทำความสะอาดข้อมูลและจัดเตรียมข้อมูลให้พร้อมสำหรับการสร้างโมเดล
+2. วิเคราะห์คุณสมบัติของข้อมูลและความสัมพันธ์ของการเปลี่ยนงานของพนักงาน
+3. ทดสอบสมมติฐานเพื่อประเมินปัจจัยที่มีศักยภาพในการทำนาย
+4. สร้างโมเดลพื้นฐาน เช่น Logistic Regression และ SVM
+5. วัดและประเมินผลโมเดลด้วย Confusion Matrix Precision-Recall F1 Score และ ROC‑AUC
+6. เพื่อสนับสนุนการวางนโยบายหรือกลยุทธ์ในการรักษาพนักงาน 
+
+**SMART Objectives**
+
+พัฒนาแบบจำลองการทำนายโอกาสการเปลี่ยนงานของพนักงาน โดยอาศัยการวิเคราะห์ปัจจัยสำคัญที่ส่งผลต่อพฤติกรรมการเปลี่ยนงาน พร้อมทั้งประเมินประสิทธิภาพของโมเดล ให้แล้วเสร็จภายในระยะเวลา 1 เดือน 
+เพื่อสนับสนุนองค์กรในการกำหนดนโยบายและกลยุทธ์ด้านการรักษาพนักงานบนพื้นฐานของหลักฐานเชิงข้อมูลที่เชื่อถือได้
+
+---
+
+## 📚 **Data Dictionary**
+
+
+
+
+   
