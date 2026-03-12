@@ -1,4 +1,4 @@
-<img width="213" height="30" alt="image" src="https://github.com/user-attachments/assets/e22b6758-8f2f-417f-b559-b060027457ab" /># Job Change Prediction Model
+Job Change Prediction Model
 โปรเจกต์นี้เป็นการวิเคราะห์ข้อมูลเชิงสำรวจ (Exploratory Data Analysis: EDA) และสร้างโมเดล Machine Learning สำหรับการทำนายการเปลี่ยนงานของพนักงาน (JobChange Prediction)
 โดยใช้ข้อมูลเชิงบุคคล ระดับการศึกษา ประสบการณ์ทำงาน ประเภทบริษัท ไปจนถึงข้อมูลเชิงพื้นที่ เช่น ดัชนีพัฒนาเมือง
 
