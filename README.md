@@ -1,4 +1,4 @@
-# Job Change Prediction Model
+<img width="213" height="30" alt="image" src="https://github.com/user-attachments/assets/e22b6758-8f2f-417f-b559-b060027457ab" /># Job Change Prediction Model
 โปรเจกต์นี้เป็นการวิเคราะห์ข้อมูลเชิงสำรวจ (Exploratory Data Analysis: EDA) และสร้างโมเดล Machine Learning สำหรับการทำนายการเปลี่ยนงานของพนักงาน (JobChange Prediction)
 โดยใช้ข้อมูลเชิงบุคคล ระดับการศึกษา ประสบการณ์ทำงาน ประเภทบริษัท ไปจนถึงข้อมูลเชิงพื้นที่ เช่น ดัชนีพัฒนาเมือง
 
@@ -58,9 +58,16 @@
 
 ---
 
-## 🧹 **Data Cleansing**
+## 🧹 **Data Preparation**
 
-**1. Missing Values**
+**1. ตรวจสอบ Data Type**
+  - ปรับ Data Type ให้ถูกต้อง
+
+**2. ปรับข้อมูลให้ง่ายต่อการใช้งาน**
+  - Attribute `experience` ปรับ <1 ให้เป็น 0 และ >20 ให้เป็น 21
+
+
+**3. Missing Values**
 
 ### Missing Values: gender
 Attribute `gender` มีค่า Missing จำนวน 4,508 รายการ (23.53% ของข้อมูลทั้งหมด) ซึ่งถือเป็นสัดส่วนที่สูงและอาจส่งผลต่อความแม่นยำของโมเดลทำนายได้
