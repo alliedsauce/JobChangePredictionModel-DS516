@@ -450,7 +450,7 @@ plt.show()
 ---
 
 ### ⚔️ Logistic Regression VS. SVM (Support Vector Machine)
-![Confusion Matrix](Material/LR-SVM.png)
+![Confusion Matrix](Material/ROC-LRSVMCV.png)
 
 #### ⚡ 1) ความแม่นยำรวม (Accuracy)
 - Logistic = 0.72
