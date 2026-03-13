@@ -49,7 +49,7 @@
 | education_level | ระดับการศึกษาสูงสุด | Ordinal | Primary < High < Graduate < Masters < Phd | Graduate |
 | major_discipline | สาขาวิชาหลัก | Nominal | STEM, Business Degree, Arts, Humanities, No Major, Other | STEM |
 | experience | ปีประสบการณ์ทำงาน | Ratio (Int) | [0, ∞) | 5 |
-| company_size | ขนาดบริษัท | Ordinal | micro < small < medium < large < enterprise < corporate | small |
+| company_size | ขนาดบริษัท | Ordinal | >10, 10-49, 50-99, 100-499,...,10000+  | 50-99 |
 | company_type | ประเภทองค์กร | Nominal | Pvt Ltd, Public Sector, NGO, Early Stage Startup, Funded Startup, Other | Pvt Ltd |
 | last_new_job | ความต่างของจำนวนปีของงานเก่ากับงานปัจจุบัน | Ratio (Int) | [0, ∞) | 1 |
 | training_hours | ชั่วโมงฝึกอบรม/เรียนรู้เพิ่มเติม | Ratio (Int) | [0, ∞) | 72 |
