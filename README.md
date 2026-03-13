@@ -464,7 +464,7 @@ plt.show()
 
 #### 📉 3) False Negative
 - Logistic FN = 280
-- SVM FN = 276
+- SVM FN = 226
 - SVM พลาดคนน้อยกว่าซึ่งดีกว่าในภารกิจ Early Warning
 
 #### 📈 4) ROC–AUC (ความสามารถแยกคลาสโดยรวม)
