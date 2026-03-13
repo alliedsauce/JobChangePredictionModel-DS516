@@ -1,10 +1,10 @@
-# Job Change Prediction Model
+# 🧑‍💼 Job Change Prediction Model
 โปรเจกต์นี้เป็นการวิเคราะห์ข้อมูลเชิงสำรวจ (Exploratory Data Analysis: EDA) และสร้างโมเดล Machine Learning สำหรับการพยากรณ์การเปลี่ยนงานของพนักงาน (JobChange Prediction)
 โดยใช้ข้อมูลเชิงบุคคล ระดับการศึกษา ประสบการณ์ทำงาน ประเภทบริษัท ไปจนถึงข้อมูลเชิงพื้นที่ เช่น ดัชนีพัฒนาเมือง
 
 ---
 
-## 🧠 **Background**
+## 🏙️ Background
 - ชุดข้อมูลประกอบไปด้วย
   - ข้อมูลการย้ายงานของพนักงาน รวมถึงปัจจัยต่าง ๆ ทั้งหมด 19,158 record
   - ตัวแปรเป้าหมาย คือ JobChange (0 = ไม่เปลี่ยนงาน, 1 = เปลี่ยนงาน) 
@@ -14,13 +14,13 @@
 
 ---
 
-## 🧠 **Problem Statement**
+## ❓ Problem Statement
 องค์กรจำนวนมากมีอัตราการลาออกของพนักงานสูง ซึ่งส่งผลให้เกิดต้นทุนด้านการสรรหา การอบรม และสูญเสียผลผลิตอย่างมีนัยสำคัญ 
 การคาดการณ์ความเป็นไปได้ที่พนักงานจะเปลี่ยนงานล่วงหน้าจึงเป็นสิ่งสำคัญต่อการวางแผนด้านทรัพยากรบุคคลและกลยุทธ์การรักษาพนักงาน (Retention Strategy)
 
 ---
 
-## 🎯 **Objectives/SMART Objectives**
+## 🎯 Objectives/SMART Objectives
 **Objectives**
 1. ทำความสะอาดข้อมูลและจัดเตรียมข้อมูลให้พร้อมสำหรับการสร้างโมเดล
 2. วิเคราะห์คุณสมบัติของข้อมูลและความสัมพันธ์ของการเปลี่ยนงานของพนักงาน
@@ -36,7 +36,7 @@
 
 ---
 
-## 🗂️ **Data Dictionary**
+## 📚 Data Dictionary
 
 | **Attribute** | **Description** | **Data Type** | **Allowed Values / Range** | **Example** |
 |---|---|---|---|---|
@@ -57,12 +57,12 @@
 
 ---
 
-## 🔧 Data Transformation & Preprocessing
+## 🧹 Data Cleaning & Feature Transformation
 
-### 1. ตรวจสอบและกำหนดชนิดข้อมูล (Data Types)
+### 👀 1. ตรวจสอบและกำหนดชนิดข้อมูล (Data Types)
   - ปรับ Data Type ให้ถูกต้อง
 
-### 2. ปรับข้อมูลให้ง่ายต่อการใช้งาน (Feature Transformation)
+### ♻️ 2. ปรับข้อมูลให้ง่ายต่อการใช้งาน (Feature Transformation)
 #### 2.1 Attribute experience ปรับดังนี้
   - <1 = 0 และ >20 = 21
 #### 2.2 Attribute company_size ปรับให้เป็น rank ดังนี้ 
@@ -78,7 +78,7 @@
   #### 2.3 Attribute last_new_job ปรับดังนี้
   - never = 0 และ >4 = 5
 
-### 3. การจัดการ Missing Values
+### 🧩 3. การจัดการ Missing Values
 
 | Attribute            | Missing (จำนวน) | Missing (%) | Missing Type | แนวทางการจัดการ |
 |---------------------|----------------:|------------:|--------------|------------------|
@@ -93,19 +93,20 @@
 
 ---
 
-# 🔍 **Exploratory Data Analysis (EDA)**
+## 🔍 **Exploratory Data Analysis (EDA)**
 
-## 🛠️ วิธีการวิเคราะห์
-#### การตั้งกรอบสมมติฐาน (Two‑tailed Hypothesis Testing)
+### 🗂️ การตั้งกรอบสมมติฐาน (Two‑tailed Hypothesis Testing)
 เพื่อทดสอบว่าปัจจัยเชิงหมวดหมู่มีความสัมพันธ์กับการเปลี่ยนงานหรือไม่ กำหนดสมมติฐานดังนี้:
   - **H₀:** ไม่มีความสัมพันธ์ระหว่างปัจจัยกับการเปลี่ยนงาน (ρ = 0)
   - **H₁:** มีความสัมพันธ์ระหว่างปัจจัยกับการเปลี่ยนงาน (ρ ≠ 0)
-#### เครื่องมือทางสถิติที่ใช้ในการวิเคราะห์
+
+### 🛠️ เครื่องมือทางสถิติที่ใช้ในการวิเคราะห์
 - **Contingency Table (O/E)** ใช้ตรวจสอบจำนวนข้อมูลจริง (Observed) เทียบกับจำนวนที่คาดว่าจะเป็นภายใต้สมมติฐานศูนย์ (Expected)
 - **Chi‑square Test of Independence** ใช้ประเมินว่าตัวแปรจัดหมวดหมู่สองตัวว่ามีความสัมพันธ์กันหรือไม่
 - **p‑value (ระดับนัยสำคัญทางสถิติ)** ใช้ตัดสินว่าผลลัพธ์มีความน่าจะเป็นเกิดจากความบังเอิญภายใต้ H₀ หรือไม่
 - **Cramér’s V (ขนาดความสัมพันธ์ / Effect Size)** ใช้วัดความแรงของความสัมพันธ์ที่พบ
-#### เครื่องมือที่ใช้ในการประมวลผล
+
+### 💻 เครื่องมือที่ใช้ในการประมวลผล
 ใช้ Python สำหรับ
 - การสร้าง Contingency Table
 - การคำนวณค่า Chi‑square
@@ -114,7 +115,7 @@
 - Point-biserial Correlation
 - การสร้าง Visualization เพื่อแสดงผลลัพธ์ (Matplotlib / Seaborn)
 
-#### ตารางสรุปค่าความสัมพัมธ์ของแต่ละปัจจัย เทียบกับ การเปลี่ยนงาน
+### 📟 ตารางสรุปค่าความสัมพัมธ์ของแต่ละปัจจัย เทียบกับ การเปลี่ยนงาน
 | Feature                  | Type          | Chi-square | df | p-value       | Cramer's V | N      | Point-biserial r | p-value (r)    |
 |--------------------------|---------------|-----------:|---:|--------------:|-----------:|-------:|-----------------:|---------------:|
 | gender                   | Categorical   | 117.377    |  3 | 2.833e-25     | 0.0783     | 19158  | N/A              | N/A            |
@@ -130,7 +131,7 @@
 | last_new_job             | Numeric       | N/A        | N/A| N/A           | N/A        | 19158  | -0.0849          | 5.167e-32      |
 | training_hours           | Numeric       | N/A        | N/A| N/A           | N/A        | 19158  | -0.0216          | 2.820e-03      |
 
-#### 📑 Hypothesis Testing
+### 🧪 Hypothesis Testing
 | ลำดับ | ปัจจัย                   | H₀ (Null Hypothesis)                               | H₁ (Alternative Hypothesis)                        | วิธีทดสอบ            | ผล (α = 0.05) |
 |------:|---------------------------|----------------------------------------------------|----------------------------------------------------|----------------------|---------------|
 | 1     | gender                    | เพศ **ไม่สัมพันธ์** กับการเปลี่ยนงาน            | เพศ **สัมพันธ์** กับการเปลี่ยนงาน                | Chi‑square           | **ปฏิเสธ H₀** (p ≈ 2.83×10⁻²⁵) |
@@ -147,7 +148,7 @@
 
 ---
 
-# Feature Selection
+## 🔑 Feature Selection
 จากการวิเคราะห์ข้อมูลทั้งหมด ในการหาค่าความสัมพันธ์ของปัจจัยต่าง ๆ โดยใช้เครื่องมือ Chi-square และ Cramer's V สำหรับข้อมูลประเภท Categorical และ Point-biserial Correlation สำหรับข้อมูลประเภท Numeric 
 พบว่าสามารถแบ่งปัจจัยทั้งหมดออกได้เป็น 3 กลุ่ม ดังนี้
 
@@ -155,13 +156,11 @@
 - company_size Cramér’s V = 0.246 มีนัยสำคัญสูงมาก (χ²=1161.96, p≈1.59×10⁻²⁴⁵)
 - company_type Cramér’s V = 0.224 มีนัยสำคัญสูงมาก (χ²=959.83, p≈4.35×10⁻²⁰⁴)
 - city_development_index (CDI) มีนัยสำคัญสูงมาก Point‑biserial r = −0.342
-
-🥈 ตัวแปรที่มี “อิทธิพลระดับสูง”
 - experience มีนัยสำคัญสูง Point‑biserial r = −0.177
 - enrolled_university Cramér’s V = 0.156 มีนัยสำคัญสูง (χ²=463.53, p≈3.81×10⁻¹⁰⁰)
 - relevant_experience Cramér’s V = 0.128 มีนัยสำคัญสูง ²=315.34, p≈1.50×10⁻⁷⁰) 
 
-🥉 ตัวแปรที่มี “อิทธิพลระดับปานกลาง”
+🥈 ตัวแปรที่มี “อิทธิพลระดับสูง”
 - education_level Cramér’s V = 0.093 มีนัยสำคัญ (χ²=167.27, p≈2.79×10⁻³⁴)
 - gender Cramér’s V = 0.078 มีนัยสำคัญ (χ² p≈2.83×10⁻²⁵)
 - major_discipline Cramér’s V = 0.058 มีนัยสำคัญ (χ² p≈4.26×10⁻¹²)
@@ -170,8 +169,8 @@
 
 ---
 
-# 🌐 Modeling Methodology
-## 🧠 Model Type
+## 🌐 Modeling Methodology
+### 🖥️ Model Type
  - **Supervised Learning:** ประเภท Binary Classification
  - **Target Label:** ไม่เปลี่ยนงาน (0) และ เปลี่ยนงาน (1)
  - **Primary Features:** company_size, company_type, city_development_index, experience, enrolled_university, relevant_experience
@@ -179,7 +178,7 @@
 
 ---
 
-### 🧩 Chosen Model
+### ⚙️ Chosen Model
  - **Logistic Regression** เหมาะกับ Binary Classification เพราะตีความง่าย และรองรับการปรับ Class Weight
  - **SVM** แยก boundary ของ class แบบชัดเจน ทำงานได้ดีในข้อมูลที่ feature interaction มีความซับซ้อน และรองรับการปรับ Class Weight
 
@@ -277,11 +276,11 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 
 ### 📊 Model Evaluation Report — Logistic Regression
 
-**1) ภาพรวมของโมเดล**
+#### 📖 1) ภาพรวมของโมเดล
 โมเดล Logistic Regression ถูกนำมาใช้เพื่อพยากรณ์ความเป็นไปได้ที่พนักงานจะ “เปลี่ยนงาน (1)” หรือ “ไม่เปลี่ยนงาน (0)” จากชุดข้อมูลที่มีความไม่สมดุล (Imbalanced) โดยคลาส 0 มีสัดส่วนสูงกว่าคลาส 1 อย่างมีนัยสำคัญ 
 ซึ่งเป็นปัญหามาตรฐานของชุดข้อมูลนี้ตามเอกสารอ้างอิงของชุดข้อมูลต้นทาง ที่ระบุว่าคลาส 0 มีสัดส่วน 75.07% และคลาส 1 มี 24.93%
 
-**2) Classification Report**
+#### 📜 2) Classification Report
 ```python
 from sklearn.metrics import classification_report
 print(classification_report(y_test, y_pred))
@@ -294,7 +293,7 @@ print(classification_report(y_test, y_pred))
 | Macro Avg    | 0.67      | 0.71   | 0.67     | 3832    |
 | Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
 
-**3) การแปลผลของค่าสถิติต่าง ๆ**
+#### 📝 3) การแปลผลของค่าสถิติต่าง ๆ
 - Accuracy = 0.72 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
 - Precision
   - Class 0 (0.88) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
@@ -304,7 +303,7 @@ print(classification_report(y_test, y_pred))
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.55 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
 
-**🔢 4) Confusion Matrix Interpretation**
+#### 🔢 4) Confusion Matrix Interpretation
 ```python
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 cm = confusion_matrix(y_test, y_pred)
@@ -318,7 +317,7 @@ plt.show()
 - False Negative (280) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
 - False Positive (811) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
 
-**🔢 5) ROC Curve และภาพรวมคุณภาพโมเดล**
+#### 📈 5) ROC Curve และภาพรวมคุณภาพโมเดล
 
 ![Confusion Matrix](Material/ROC-LR.png)
 
@@ -343,11 +342,11 @@ y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
 
 ### 📊 Model Evaluation Report — SVM (Support Vector Machine)
 
-**1) ภาพรวมของโมเดล**
+#### 📖 1) ภาพรวมของโมเดล
 โมเดล Support Vector Machine (SVM) ถูกใช้สำหรับการพยากรณ์การเปลี่ยนงานในปัญหาแบบ Binary Classification โดยทำงานได้ดีภายใต้ชุดข้อมูลที่ไม่สมดุล และให้ค่า Accuracy = 0.72 พร้อม ROC‑AUC = 0.759 
 ซึ่งสะท้อนความสามารถในการแยกคนที่ “เสี่ยงลาออก” ออกจากคนที่ “ไม่ลาออก” ได้ในระดับที่น่าพอใจ โดยเฉพาะอย่างยิ่งในบริบทของ HR Analytics ที่ต้องการ Early Warning ต่อความเสี่ยงการลาออกของพนักงาน
 
-**2) Classification Report**
+#### 📜 2) Classification Report
 ```python
 from sklearn.metrics import classification_report
 print(classification_report(y_test, y_pred_svm))
@@ -360,7 +359,7 @@ print(classification_report(y_test, y_pred_svm))
 | Macro Avg    | 0.66      | 0.70   | 0.67     | 3832    |
 | Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
 
-**3) การแปลผลของค่าสถิติต่าง ๆ**
+#### 📝 3) การแปลผลของค่าสถิติต่าง ๆ
 - Accuracy = 0.72 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
 - Precision
   - Class 0 (0.87) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
@@ -370,7 +369,7 @@ print(classification_report(y_test, y_pred_svm))
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.54 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
 
-**🔢 4) Confusion Matrix Interpretation**
+#### 🔢 4) Confusion Matrix Interpretation
 ```python
 from sklearn.metrics import ConfusionMatrixDisplay
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred_svm)
@@ -381,34 +380,34 @@ ConfusionMatrixDisplay.from_predictions(y_test, y_pred_svm)
 - False Negative (319) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
 - False Positive (760) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
 
-**🔢 5) ROC Curve และภาพรวมคุณภาพโมเดล**
+#### 📈 5) ROC Curve และภาพรวมคุณภาพโมเดล
 
 ![Confusion Matrix](Material/ROC-SVM.png)
 
 เส้น ROC ของโมเดลอยู่สูงกว่าเส้น Random Guess อย่างชัดเจน ซึ่งสะท้อนว่าโมเดลมีความสามารถในการแยกพนักงานที่มีแนวโน้มจะลาออก ออกจากผู้ที่ไม่ลาออกได้ดีกว่าแบบเดาสุ่ม 
 ทั้งนี้ค่า AUC จากกราฟประมาณ 0.75 แสดงว่าโมเดลมีคุณภาพ “ดี” สำหรับงานทำนายเชิง HR Analytics ที่มี class imbalance สูง
 
-### Logistic Regression VS. SVM (Support Vector Machine)
+### ⚔️ Logistic Regression VS. SVM (Support Vector Machine)
 ![Confusion Matrix](Material/LR-SVM.png)
 
-**1) ความแม่นยำรวม (Accuracy)**
+#### ⚡ 1) ความแม่นยำรวม (Accuracy)
 - Logistic = 0.72
 - SVM = 0.72
 - ไม่ต่างกัน ใช้ตัดสินไม่ได้
 
-**2) ความสามารถ “จับคนที่จะลาออก”**
+#### 🚩 2) ความสามารถ “จับคนที่จะลาออก”
 - Logistic Recall (Class 1) ≈ 0.71
 - SVM Recall (Class 1) ≈ 0.66
 - Logistic จับคนที่จะลาออกได้มากกว่า (FN น้อยกว่า)
 
-**3) False Negative**
+#### 📉 3) False Negative
 - Logistic FN = 280
 - SVM FN = 319
 - Logistic พลาดคนน้อยกว่าซึ่งดีกว่าในภารกิจ Early Warning
 
-**4) ROC–AUC (ความสามารถแยกคลาสโดยรวม)**
+#### 📈 4) ROC–AUC (ความสามารถแยกคลาสโดยรวม)
 - Logistic AUC ≈ ใกล้เคียง 0.76
-- VM AUC = 0.759
+- SVM AUC = 0.759
 - ประสิทธิภาพโดยรวมใกล้เคียงกัน
 
 ### 🏆 ควรเลือกโมเดลไหนดี? 
