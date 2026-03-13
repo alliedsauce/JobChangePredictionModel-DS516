@@ -256,16 +256,32 @@ X_test_scaled = scaler.transform(X_test)
 ```
 
 ---
+### 🤖 Model: Logistic Regression with no Cross Validation
+```python
+from sklearn.linear_model import LogisticRegression
+model_no_cv = LogisticRegression(max_iter=1000, class_weight='balanced')
+model_no_cv.fit(X_train_scaled, y_train)
 
-### 🤖 Model: Logistic Regression
+y_pred_no_cv = model_no_cv.predict(X_test_scaled)
+y_prob_no_cv = model.predict_proba(X_test_scaled)[:,1]
+
+```
+
+### 🤖 Model: Logistic Regression with Cross Validation
 ```python
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 param_grid = {
     'penalty': ['l1','l2'],
+    'C': [0.01,0.1,1,10],
     'solver': ['liblinear']}
+
 model = GridSearchCV(
-    LogisticRegression(max_iter=1000, class_weight='balanced'), param_grid, cv=5, scoring='f1')
+    LogisticRegression(max_iter=1000, class_weight='balanced'),
+    param_grid,
+    cv=5,
+    scoring='f1')
+
 model.fit(X_train_scaled, y_train)
 
 y_pred = model.predict(X_test_scaled)
@@ -276,8 +292,7 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 ### 📊 Model Evaluation Report — Logistic Regression
 
 #### 📖 1) ภาพรวมของโมเดล
-โมเดล Logistic Regression ถูกนำมาใช้เพื่อพยากรณ์ความเป็นไปได้ที่พนักงานจะ “เปลี่ยนงาน (1)” หรือ “ไม่เปลี่ยนงาน (0)” จากชุดข้อมูลที่มีความไม่สมดุล (Imbalanced) โดยคลาส 0 มีสัดส่วนสูงกว่าคลาส 1 อย่างมีนัยสำคัญ 
-ซึ่งเป็นปัญหามาตรฐานของชุดข้อมูลนี้ตามเอกสารอ้างอิงของชุดข้อมูลต้นทาง ที่ระบุว่าคลาส 0 มีสัดส่วน 75.07% และคลาส 1 มี 24.93%
+จากการทดลองทำโมเดล Logistic Regression ทั้ง 2 แบบ (แบบใช้และไม่ใช้ Cross Validation) พบว่าทั้ง 2 วิธีให้ค่าเดียวกัน
 
 #### 📜 2) Classification Report
 ```python
@@ -323,29 +338,26 @@ plt.show()
 เส้น ROC ของโมเดลอยู่สูงกว่าเส้น Random Guess อย่างชัดเจน ซึ่งสะท้อนว่าโมเดลมีความสามารถในการแยกพนักงานที่มีแนวโน้มจะลาออก ออกจากผู้ที่ไม่ลาออกได้ดีกว่าแบบเดาสุ่ม 
 ทั้งนี้ค่า AUC จากกราฟประมาณ 0.75–0.78 แสดงว่าโมเดลมีคุณภาพ “ดี” สำหรับงานทำนายเชิง HR Analytics ที่มี class imbalance สูง
 
+---
 
-### 🤖 Model: SVM (Support Vector Machine)
+### 🤖 Model: SVM (Support Vector Machine) with no cross Validation
 ```python
 from sklearn.svm import SVC
-from sklearn.model_selection import GridSearchCV
-param_grid = {
-    'kernel':['linear']}
-svm_model = GridSearchCV(
-    SVC(class_weight='balanced', probability=True), param_grid, cv=3, scoring='f1', n_jobs=-1)
-svm_model.fit(X_train_scaled, y_train)
+svm_no_cv = SVC(
+    kernel='linear',
+    class_weight='balanced',
+    probability=True)
 
-y_pred_svm = svm_model.predict(X_test_scaled)
-y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
+svm_no_cv.fit(X_train_scaled, y_train)
+
+y_pred_svm_no_cv = svm_no_cv.predict(X_test_scaled)
+y_prob_svm_no_cv = svm_no_cv.predict_proba(X_test_scaled)[:,1]
 ```
 ---
 
-### 📊 Model Evaluation Report — SVM (Support Vector Machine)
+### 📊 Model Evaluation Report — SVM (Support Vector Machine) with no cross Validation
 
-#### 📖 1) ภาพรวมของโมเดล
-โมเดล Support Vector Machine (SVM) ถูกใช้สำหรับการพยากรณ์การเปลี่ยนงานในปัญหาแบบ Binary Classification โดยทำงานได้ดีภายใต้ชุดข้อมูลที่ไม่สมดุล และให้ค่า Accuracy = 0.72 พร้อม ROC‑AUC = 0.759 
-ซึ่งสะท้อนความสามารถในการแยกคนที่ “เสี่ยงลาออก” ออกจากคนที่ “ไม่ลาออก” ได้ในระดับที่น่าพอใจ โดยเฉพาะอย่างยิ่งในบริบทของ HR Analytics ที่ต้องการ Early Warning ต่อความเสี่ยงการลาออกของพนักงาน
-
-#### 📜 2) Classification Report
+#### 📜 1) Classification Report 
 ```python
 from sklearn.metrics import classification_report
 print(classification_report(y_test, y_pred_svm))
@@ -358,7 +370,7 @@ print(classification_report(y_test, y_pred_svm))
 | Macro Avg    | 0.66      | 0.70   | 0.67     | 3832    |
 | Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
 
-#### 📝 3) การแปลผลของค่าสถิติต่าง ๆ
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
 - Accuracy = 0.72 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
 - Precision
   - Class 0 (0.87) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
@@ -368,7 +380,7 @@ print(classification_report(y_test, y_pred_svm))
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.54 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
 
-#### 🔢 4) Confusion Matrix Interpretation
+#### 🔢 3) Confusion Matrix Interpretation
 ```python
 from sklearn.metrics import ConfusionMatrixDisplay
 ConfusionMatrixDisplay.from_predictions(y_test, y_pred_svm)
@@ -379,12 +391,85 @@ ConfusionMatrixDisplay.from_predictions(y_test, y_pred_svm)
 - False Negative (319) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
 - False Positive (760) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
 
-#### 📈 5) ROC Curve และภาพรวมคุณภาพโมเดล
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
 
 ![Confusion Matrix](Material/ROC-SVM.png)
 
 เส้น ROC ของโมเดลอยู่สูงกว่าเส้น Random Guess อย่างชัดเจน ซึ่งสะท้อนว่าโมเดลมีความสามารถในการแยกพนักงานที่มีแนวโน้มจะลาออก ออกจากผู้ที่ไม่ลาออกได้ดีกว่าแบบเดาสุ่ม 
 ทั้งนี้ค่า AUC จากกราฟประมาณ 0.75 แสดงว่าโมเดลมีคุณภาพ “ดี” สำหรับงานทำนายเชิง HR Analytics ที่มี class imbalance สูง
+
+---
+
+### 🤖 Model: SVM (Support Vector Machine) with cross Validation
+```python
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+param_grid = {
+    'kernel': ['linear','rbf'],
+    'C': [1,10]}
+svm_model = GridSearchCV(
+    SVC(class_weight='balanced', probability=True),
+    param_grid,
+    cv=3,
+    scoring='f1',
+    n_jobs=-1)
+
+y_pred_svm = svm_model.predict(X_test_scaled)
+y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
+```
+---
+
+### 📊 Model Evaluation Report — SVM (Support Vector Machine) with Cross Validation
+
+#### 📜 1) Classification Report
+```python
+from sklearn.metrics import classification_report
+print(classification_report(y_test, y_pred_svm))
+```
+|    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
+|--------------|:-----------:|:--------:|:----------:|:---------:|
+| ไม่เปลี่ยนงาน   | 0.90      | 0.74  | 0.81     | 2880     |
+| เปลี่ยนงาน     | 0.49      | 0.76   | 0.60     | 952     |
+| Accuracy     |           |        | **0.75**     | 3832    |
+| Macro Avg    | 0.70      | 0.75   | 0.71     | 3832    |
+| Weighted Avg | 0.80      | 0.75   | 0.76     | 3832    |
+
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
+- Accuracy = 0.72 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
+- Precision
+  - Class 0 (0.87) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
+  - Class 1 (0.45) → มี False Positive ค่อนข้างสูง แปลว่า “มีหลายครั้งที่โมเดลทำนายว่าพนักงานจะลาออก แต่จริง ๆ ไม่ได้ลาออก”
+  - อย่างไรก็ตาม False Positive ไม่ได้มีผลเสียมากนักสำหรับงาน HR เพราะเป็นเพียงการเฝ้าติดตามเพิ่มเติม
+- Recall  Class 1 = 0.66 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 66%
+- F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.54 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
+
+
+#### 🔢 3) Confusion Matrix Interpretation
+```python
+from sklearn.metrics import ConfusionMatrixDisplay
+ConfusionMatrixDisplay.from_predictions(y_test, y_pred_svm)
+```
+![Confusion Matrix](Material/CM-SVM.png)
+
+- True Positive (633) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
+- False Negative (319) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
+- False Positive (760) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
+
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
+
+![Confusion Matrix](Material/ROC-SVM.png)
+
+เส้น ROC ของโมเดลอยู่สูงกว่าเส้น Random Guess อย่างชัดเจน ซึ่งสะท้อนว่าโมเดลมีความสามารถในการแยกพนักงานที่มีแนวโน้มจะลาออก ออกจากผู้ที่ไม่ลาออกได้ดีกว่าแบบเดาสุ่ม 
+ทั้งนี้ค่า AUC จากกราฟประมาณ 0.75 แสดงว่าโมเดลมีคุณภาพ “ดี” สำหรับงานทำนายเชิง HR Analytics ที่มี class imbalance สูง
+
+
+
+
+
+
+
+
+
 
 ### ⚔️ Logistic Regression VS. SVM (Support Vector Machine)
 ![Confusion Matrix](Material/LR-SVM.png)
