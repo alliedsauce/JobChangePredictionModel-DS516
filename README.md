@@ -449,6 +449,17 @@ plt.show()
 
 ---
 
+### โมเดลอื่น ๆ 
+| Model                | Recall (Class 1) |
+|----------------------|------------------|
+| Decision Tree (DT)   | 0.45             |
+| K‑Nearest Neighbors (KNN) | 0.41        |
+| Naive Bayes (NB)     | 0.52             |
+| Support Vector Machine (SVM) | **0.76** |
+| Logistic Regression (LR) | 0.71         |
+
+---
+
 ### ⚔️ Logistic Regression VS. SVM (Support Vector Machine)
 ![Confusion Matrix](Material/ROC-LRSVMCV.png)
 
@@ -471,6 +482,8 @@ plt.show()
 - Logistic AUC ≈ 0.76
 - SVM AUC ≈ 0.76
 - ประสิทธิภาพโดยรวมใกล้เคียงกัน
+
+
 
 ### 🏆 ควรเลือกโมเดลไหนดี? 
 ✅ เลือก SVM with Cross‑Validation
