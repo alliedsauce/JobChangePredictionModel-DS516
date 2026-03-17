@@ -178,8 +178,11 @@
 ---
 
 ### ⚙️ Chosen Model
- - **Logistic Regression** เหมาะกับ Binary Classification เพราะตีความง่าย และรองรับการปรับ Class Weight
- - **SVM** แยก boundary ของ class แบบชัดเจน ทำงานได้ดีในข้อมูลที่ feature interaction มีความซับซ้อน และรองรับการปรับ Class Weight
+ - **Logistic Regression**
+ - **SVM**
+ - **Decision Tree**
+ - **K-Nearest Neighbors (KNN)**
+ - **Naive Bayes**
 
 ---
 
@@ -256,7 +259,8 @@ X_test_scaled = scaler.transform(X_test)
 ```
 
 ---
-### 🤖 Model: Logistic Regression with no Cross‑Validation
+## 🤖 Model: Logistic Regression
+### with no GridSearchCV
 ```python
 from sklearn.linear_model import LogisticRegression
 model_no_cv = LogisticRegression(max_iter=1000, class_weight='balanced')
@@ -264,10 +268,9 @@ model_no_cv.fit(X_train_scaled, y_train)
 
 y_pred_no_cv = model_no_cv.predict(X_test_scaled)
 y_prob_no_cv = model.predict_proba(X_test_scaled)[:,1]
-
 ```
 
-### 🤖 Model: Logistic Regression with Cross‑Validation
+### with GridSearchCV
 ```python
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
@@ -275,30 +278,22 @@ param_grid = {
     'penalty': ['l1','l2'],
     'C': [0.01,0.1,1,10],
     'solver': ['liblinear']}
-
 model = GridSearchCV(
     LogisticRegression(max_iter=1000, class_weight='balanced'),
     param_grid,
     cv=5,
     scoring='f1')
-
 model.fit(X_train_scaled, y_train)
-
 y_pred = model.predict(X_test_scaled)
 y_prob = model.predict_proba(X_test_scaled)[:,1]
 ```
----
-
 ### 📊 Model Evaluation Report — Logistic Regression
 
 #### 📖 1) ภาพรวมของโมเดล
-จากการทดลองทำโมเดล Logistic Regression ทั้ง 2 แบบ (แบบใช้และไม่ใช้ Cross Validation) พบว่าทั้ง 2 วิธีให้ค่าเดียวกัน
+จากการทดลองทำโมเดล Logistic Regression ทั้ง 2 แบบ (แบบใช้และไม่ใช้ GridSearchCV) พบว่าทั้ง 2 วิธีให้ค่าเดียวกัน
 
 #### 📜 2) Classification Report
-```python
-from sklearn.metrics import classification_report
-print(classification_report(y_test, y_pred))
-```
+
 |    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
 |--------------|:-----------:|:--------:|:----------:|:---------:|
 | ไม่เปลี่ยนงาน   | 0.88      | 0.72  | 0.79     | 2880     |
@@ -316,15 +311,8 @@ print(classification_report(y_test, y_pred))
 - Recall  Class 1 = 0.71 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 71%
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.55 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
-
 #### 🔢 4) Confusion Matrix Interpretation
-```python
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-cm = confusion_matrix(y_test, y_pred)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm)
-disp.plot()
-plt.show()
-```
+
 ![Confusion Matrix](Material/CM-LR.jpg)
 
 - True Positive (672) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
@@ -339,23 +327,19 @@ plt.show()
 ทั้งนี้ค่า AUC จากกราฟประมาณ 0.75–0.78 แสดงว่าโมเดลมีคุณภาพ “ดี” สำหรับงานทำนายเชิง HR Analytics ที่มี class imbalance สูง
 
 ---
-
-### 🤖 Model: SVM (Support Vector Machine) with no Cross‑Validation
+## 🤖 Model: SVM (Support Vector Machine) 
+### with no GridSearchCV
 ```python
 from sklearn.svm import SVC
 svm_no_cv = SVC(
     kernel='linear',
     class_weight='balanced',
     probability=True)
-
 svm_no_cv.fit(X_train_scaled, y_train)
-
 y_pred_svm_no_cv = svm_no_cv.predict(X_test_scaled)
 y_prob_svm_no_cv = svm_no_cv.predict_proba(X_test_scaled)[:,1]
 ```
----
-
-### 🤖 Model: SVM (Support Vector Machine) with Cross‑Validation
+### with GridSearchCV
 ```python
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
@@ -368,20 +352,14 @@ svm_model = GridSearchCV(
     cv=3,
     scoring='f1',
     n_jobs=-1)
-
 y_pred_svm = svm_model.predict(X_test_scaled)
 y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
 ```
----
-
 ### 📊 Model Evaluation Report — SVM (Support Vector Machine)
 
 ### 📜 1) Classification Report
-#### 📜 1.1) Classification Report with no Cross‑Validation
-```python
-from sklearn.metrics import classification_report
-print(classification_report(y_test, y_pred_svm))
-```
+#### 📜 1.1) Classification Report with no GridSearchCV
+
 |    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
 |--------------|:-----------:|:--------:|:----------:|:---------:|
 | ไม่เปลี่ยนงาน   | 0.87      | 0.74  | 0.80     | 2880     |
@@ -390,11 +368,8 @@ print(classification_report(y_test, y_pred_svm))
 | Macro Avg    | 0.66      | 0.70   | 0.67     | 3832    |
 | Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
 
-#### 📜 1.2) Classification Report with Cross‑Validation
-```python
-from sklearn.metrics import classification_report
-print(classification_report(y_test, y_pred_svm))
-```
+#### 📜 1.2) Classification Report with GridSearchCV
+
 |    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
 |--------------|:-----------:|:--------:|:----------:|:---------:|
 | ไม่เปลี่ยนงาน   | 0.90      | 0.74  | 0.81     | 2880     |
@@ -404,7 +379,7 @@ print(classification_report(y_test, y_pred_svm))
 | Weighted Avg | 0.80      | 0.75   | 0.76     | 3832    |
 
 #### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
-พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ Cross‑Validation
+พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ GridSearchCV
 - Accuracy = 0.75 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
 - Precision
   - Class 0 (0.90) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
@@ -413,27 +388,8 @@ print(classification_report(y_test, y_pred_svm))
 - Recall  Class 1 = 0.76 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 76%
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.60 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
-
 #### 🔢 3) Confusion Matrix Interpretation
-```python
-fig, ax = plt.subplots(1, 2, figsize=(10,4))
-# ซ้าย: SVM (No CV)
-ConfusionMatrixDisplay.from_predictions(
-    y_test,
-    y_pred_svm_no_cv,
-    ax=ax[0],
-    colorbar=False)
-ax[0].set_title("SVM (No CV)")
-# ขวา: SVM (With CV)
-ConfusionMatrixDisplay.from_predictions(
-    y_test,
-    y_pred_svm,
-    ax=ax[1],
-    colorbar=False)
-ax[1].set_title("SVM (With CV)")
-plt.tight_layout()
-plt.show()
-```
+
 ![Confusion Matrix](Material/CM-SVMCV.png)
 
 - True Positive (726) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
@@ -444,10 +400,126 @@ plt.show()
 
 ![Confusion Matrix](Material/ROC-SVMCV.png)
 
-กราฟ ROC แสดงว่าโมเดล SVM ที่ผ่าน Cross‑Validation ทำงานดีกว่าแบบไม่ทำ CV เพราะมีเส้นโค้งสูงกว่าและแยกกลุ่มเปลี่ยนงานได้แม่นยำกว่าอย่างชัดเจน โดยเฉพาะช่วง FPR ต่ำ ๆ 
-ซึ่งเป็นช่วงสำคัญในการทำนายความเสี่ยงผิดพลาดต่ำ ทั้งสองโมเดลทำได้ดี แต่การทำ Cross‑Validation ช่วยให้โมเดลมีประสิทธิภาพและความน่าเชื่อถือสูงกว่าอย่างเห็นได้ชัด
+กราฟ ROC แสดงว่าโมเดล SVM ที่ผ่าน GridSearchCV ทำงานดีกว่าแบบไม่ทำ GridSearchCV เพราะมีเส้นโค้งสูงกว่าและแยกกลุ่มเปลี่ยนงานได้แม่นยำกว่าอย่างชัดเจน โดยเฉพาะช่วง FPR ต่ำ ๆ 
+ซึ่งเป็นช่วงสำคัญในการทำนายความเสี่ยงผิดพลาดต่ำ ทั้งสองโมเดลทำได้ดี แต่การทำ GridSearchCV ช่วยให้โมเดลมีประสิทธิภาพและความน่าเชื่อถือสูงกว่าอย่างเห็นได้ชัด
 
 ---
+
+## 🤖 Model: Decision Tree 
+### with no GridSearchCV
+```python
+from sklearn.tree import DecisionTreeClassifier
+dt_no_cv = DecisionTreeClassifier(class_weight='balanced', random_state=42)
+dt_no_cv.fit(X_train_scaled, y_train)
+y_pred_dt_no_cv = dt_no_cv.predict(X_test_scaled)
+y_prob_dt_no_cv = dt_no_cv.predict_proba(X_test_scaled)[:,1]
+```
+
+### with GridSearchCV
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+param_grid = {
+    'max_depth':[3,5,10,None],
+    'min_samples_split':[2,5,10],
+    'min_samples_leaf':[1,2,4]}
+dt_cv = GridSearchCV(
+    DecisionTreeClassifier(class_weight='balanced', random_state=42),
+    param_grid,
+    cv=5,
+    scoring='f1',
+    n_jobs=-1)
+dt_cv.fit(X_train_scaled, y_train)
+```
+
+### 📊 Model Evaluation Report — Decision Tree
+
+
+---
+
+## 🤖 Model: K-Nearest Neighbors (KNN)
+### with no GridSearchCV
+```python
+from sklearn.neighbors import KNeighborsClassifier
+knn_model = KNeighborsClassifier(n_neighbors=5)
+knn_model.fit(X_train_scaled, y_train)
+y_pred_knn_no_cv = knn_model.predict(X_test_scaled)
+y_prob_knn_no_cv = knn_model.predict_proba(X_test_scaled)[:,1]
+```
+
+### with GridSearchCV
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+param_grid = {
+    'n_neighbors':[3,5,7,9]}
+knn_cv = GridSearchCV(
+    KNeighborsClassifier(),
+    param_grid,
+    cv=5,
+    scoring='f1')
+knn_cv.fit(X_train_scaled, y_train)
+best_knn = knn_cv.best_estimator_
+y_pred_knn_cv = best_knn.predict(X_test_scaled)
+y_prob_knn_cv = best_knn.predict_proba(X_test_scaled)[:,1]
+```
+
+### 📊 Model Evaluation Report — K-Nearest Neighbors (KNN)
+
+
+---
+
+## 🤖 Model: Naive Bayes
+### with no GridSearchCV
+```python
+from sklearn.naive_bayes import GaussianNB
+nb_no_cv = GaussianNB()
+nb_no_cv.fit(X_train_scaled, y_train)
+y_pred_nb_no_cv = nb_no_cv.predict(X_test_scaled)
+y_prob_nb_no_cv = nb_no_cv.predict_proba(X_test_scaled)[:,1]
+```
+
+### with GridSearchCV
+```python
+from sklearn.model_selection import GridSearchCV
+from sklearn.naive_bayes import GaussianNB
+param_grid = {
+    'var_smoothing':[1e-12,1e-11,1e-10,1e-9,1e-8,1e-7,1e-6,1e-5]}
+nb_cv = GridSearchCV(
+    GaussianNB(),
+    param_grid,
+    cv=5,
+    scoring='f1')
+nb_cv.fit(X_train_scaled, y_train)
+y_pred_nb_cv = nb_cv.predict(X_test_scaled)
+y_prob_nb_cv = nb_cv.predict_proba(X_test_scaled)[:,1]
+```
+
+### 📊 Model Evaluation Report — Naive Bayes
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### โมเดลอื่น ๆ 
 | Model                | Recall (Class 1) |
