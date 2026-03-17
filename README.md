@@ -386,7 +386,7 @@ y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
   - **สรุป:** โมเดล **จับคนลาออกได้ดี** แต่ยังมีการทำนายเกิน (เตือนผิด) อยู่พอสมควร
 #### 🔢 3) Confusion Matrix Interpretation
 
-![Confusion Matrix](Material/CM-SVMCV.png)
+![Confusion Matrix](Material/CM-SVM.png)
 
 - True Negative (2133) โมเดลทำนายพนักงานที่ไม่ลาออกได้อย่างถูกต้องจำนวนมาก
 - True Positive (726) โมเดลสามารถระบุพนักงานที่ลาออกจริงได้จำนวนมากในระดับที่น่าพอใจ
