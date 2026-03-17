@@ -289,10 +289,8 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 ```
 ### 📊 Model Evaluation Report — Logistic Regression
 
-#### 📖 1) ภาพรวมของโมเดล
+#### 📜 1) Classification Report
 จากการทดลองทำโมเดล Logistic Regression ทั้ง 2 แบบ (แบบใช้และไม่ใช้ GridSearchCV) พบว่าทั้ง 2 วิธีให้ค่าเดียวกัน
-
-#### 📜 2) Classification Report
 
 |    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
 |--------------|:-----------:|:--------:|:----------:|:---------:|
@@ -302,7 +300,7 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 | Macro Avg    | 0.67      | 0.71   | 0.67     | 3832    |
 | Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
 
-#### 📝 3) การแปลผลของค่าสถิติต่าง ๆ
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
 - Accuracy = 0.72 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
 - Precision
   - Class 0 (0.88) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
@@ -311,7 +309,7 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 - Recall  Class 1 = 0.71 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 71%
 - F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.55 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
 
-#### 🔢 4) Confusion Matrix Interpretation
+#### 🔢 3) Confusion Matrix Interpretation
 
 ![Confusion Matrix](Material/CM-LR.jpg)
 
@@ -319,7 +317,7 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 - False Negative (280) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
 - False Positive (811) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
 
-#### 📈 5) ROC Curve และภาพรวมคุณภาพโมเดล
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
 
 ![Confusion Matrix](Material/ROC-LR.png)
 
@@ -357,26 +355,15 @@ y_prob_svm = svm_model.predict_proba(X_test_scaled)[:,1]
 ```
 ### 📊 Model Evaluation Report — SVM (Support Vector Machine)
 
-### 📜 1) Classification Report
-#### 📜 1.1) Classification Report with no GridSearchCV
+### 📜 1) Classification Report (No GridSearchCV vs GridSearchCV)
 
-|    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
-|--------------|:-----------:|:--------:|:----------:|:---------:|
-| ไม่เปลี่ยนงาน   | 0.87      | 0.74  | 0.80     | 2880     |
-| เปลี่ยนงาน     | 0.45      | 0.66   | 0.54     | 952     |
-| Accuracy     |           |        | **0.72**     | 3832    |
-| Macro Avg    | 0.66      | 0.70   | 0.67     | 3832    |
-| Weighted Avg | 0.77      | 0.72   | 0.73     | 3832    |
-
-#### 📜 1.2) Classification Report with GridSearchCV
-
-|    | ✅ Precision | 🔍 Recall | ⚖️ F1-Score | 💾 Support |
-|--------------|:-----------:|:--------:|:----------:|:---------:|
-| ไม่เปลี่ยนงาน   | 0.90      | 0.74  | 0.81     | 2880     |
-| เปลี่ยนงาน     | 0.49      | 0.76   | 0.60     | 952     |
-| Accuracy     |           |        | **0.75**     | 3832    |
-| Macro Avg    | 0.70      | 0.75   | 0.71     | 3832    |
-| Weighted Avg | 0.80      | 0.75   | 0.76     | 3832    |
+| Label            | ✅ Precision | ✅ Precision (GS) | 🔍 Recall | 🔍 Recall (GS) | ⚖️ F1-Score | ⚖️ F1-Score (GS) | 💾 Support |
+|------------------|-------------------|----------------|----------------|-------------|------------------|---------------|---------|
+| ไม่เปลี่ยนงาน    | 0.87              | **0.90**           | 0.74           | **0.74**        | 0.80             | **0.81**          | 2880    |
+| เปลี่ยนงาน       | 0.45              | **0.49**           | 0.66           | **0.76**        | 0.54             | **0.60**          | 952     |
+| **Accuracy**     | —                 | —              | —              | —           | **0.72**         | **0.75**      | 3832    |
+| **Macro Avg**    | 0.66              | **0.70**           | 0.70           | **0.75**        | 0.67             | **0.71**          | 3832    |
+| **Weighted Avg** | 0.77              | **0.80**           | 0.72           | **0.75**        | 0.73             | **0.76**          | 3832    |
 
 #### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
 พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ GridSearchCV
@@ -417,8 +404,8 @@ y_prob_dt_no_cv = dt_no_cv.predict_proba(X_test_scaled)[:,1]
 
 ### with GridSearchCV
 ```python
-from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
 param_grid = {
     'max_depth':[3,5,10,None],
     'min_samples_split':[2,5,10],
@@ -433,7 +420,40 @@ dt_cv.fit(X_train_scaled, y_train)
 ```
 
 ### 📊 Model Evaluation Report — Decision Tree
+### 📜 1) Classification Report (No GridSearchCV vs GridSearchCV)
 
+| Label            | ✅ Precision | ✅ Precision (GS) | 🔍 Recall | 🔍 Recall (GS) | ⚖️ F1-Score | ⚖️ F1-Score (GS) | 💾 Support |
+|------------------|-------------------|----------------|----------------|-------------|------------------|---------------|---------|
+| ไม่เปลี่ยนงาน    | 0.82              | **0.90**           | 0.80           | **0.76**        | 0.81             | **0.83**          | 2880    |
+| เปลี่ยนงาน       | 0.43              | **0.51**           | 0.45           | **0.74**        | 0.44             | **0.60**          | 952     |
+| **Accuracy**     | —                 | —              | —              | —           | **0.72**         | **0.76**      | 3832    |
+| **Macro Avg**    | 0.63              | **0.70**           | 0.63           | **0.75**        | 0.63             | **0.71**          | 3832    |
+| **Weighted Avg** | 0.72              | **0.80**           | 0.72           | **0.76**        | 0.72             | **0.77**          | 3832    |
+
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
+พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ GridSearchCV
+- Accuracy = 0.75 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
+- Precision
+  - Class 0 (0.90) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
+  - Class 1 (0.49) → มี False Positive ค่อนข้างสูง แปลว่า “มีหลายครั้งที่โมเดลทำนายว่าพนักงานจะลาออก แต่จริง ๆ ไม่ได้ลาออก”
+  - อย่างไรก็ตาม False Positive ไม่ได้มีผลเสียมากนักสำหรับงาน HR เพราะเป็นเพียงการเฝ้าติดตามเพิ่มเติม
+- Recall  Class 1 = 0.76 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 76%
+- F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.60 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
+
+#### 🔢 3) Confusion Matrix Interpretation
+
+![Confusion Matrix](Material/CM-DT.png)
+
+- True Positive (726) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
+- False Negative (226) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
+- False Positive (747) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
+
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
+
+![Confusion Matrix](Material/ROC-DT.png)
+
+กราฟ ROC แสดงว่าโมเดล SVM ที่ผ่าน GridSearchCV ทำงานดีกว่าแบบไม่ทำ GridSearchCV เพราะมีเส้นโค้งสูงกว่าและแยกกลุ่มเปลี่ยนงานได้แม่นยำกว่าอย่างชัดเจน โดยเฉพาะช่วง FPR ต่ำ ๆ 
+ซึ่งเป็นช่วงสำคัญในการทำนายความเสี่ยงผิดพลาดต่ำ ทั้งสองโมเดลทำได้ดี แต่การทำ GridSearchCV ช่วยให้โมเดลมีประสิทธิภาพและความน่าเชื่อถือสูงกว่าอย่างเห็นได้ชัด
 
 ---
 
@@ -449,8 +469,8 @@ y_prob_knn_no_cv = knn_model.predict_proba(X_test_scaled)[:,1]
 
 ### with GridSearchCV
 ```python
-from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
 param_grid = {
     'n_neighbors':[3,5,7,9]}
 knn_cv = GridSearchCV(
@@ -465,6 +485,40 @@ y_prob_knn_cv = best_knn.predict_proba(X_test_scaled)[:,1]
 ```
 
 ### 📊 Model Evaluation Report — K-Nearest Neighbors (KNN)
+### 📜 1) Classification Report (No GridSearchCV vs GridSearchCV)
+
+| Label            | ✅ Precision | ✅ Precision (GS) | 🔍 Recall | 🔍 Recall (GS) | ⚖️ F1-Score | ⚖️ F1-Score (GS) | 💾 Support |
+|------------------|-------------------|----------------|----------------|-------------|------------------|---------------|---------|
+| ไม่เปลี่ยนงาน    | 0.82              | **0.82**           | 0.86           | **0.88**        | 0.84             | **0.85**          | 2880    |
+| เปลี่ยนงาน       | 0.50              | **0.53**           | 0.41           | **0.41**        | 0.45             | **0.46**          | 952     |
+| **Accuracy**     | —                 | —              | —              | —           | **0.75**         | **0.76**      | 3832    |
+| **Macro Avg**    | 0.66              | **0.67**           | 0.64           | **0.64**        | 0.65             | **0.65**          | 3832    |
+| **Weighted Avg** | 0.74              | **0.75**           | 0.75           | **0.76**        | 0.77             | **0.75**          | 3832    |
+
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
+พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ GridSearchCV
+- Accuracy = 0.75 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
+- Precision
+  - Class 0 (0.90) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
+  - Class 1 (0.49) → มี False Positive ค่อนข้างสูง แปลว่า “มีหลายครั้งที่โมเดลทำนายว่าพนักงานจะลาออก แต่จริง ๆ ไม่ได้ลาออก”
+  - อย่างไรก็ตาม False Positive ไม่ได้มีผลเสียมากนักสำหรับงาน HR เพราะเป็นเพียงการเฝ้าติดตามเพิ่มเติม
+- Recall  Class 1 = 0.76 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 76%
+- F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.60 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
+
+#### 🔢 3) Confusion Matrix Interpretation
+
+![Confusion Matrix](Material/CM-KNN.png)
+
+- True Positive (726) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
+- False Negative (226) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
+- False Positive (747) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
+
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
+
+![Confusion Matrix](Material/ROC-KNN.png)
+
+กราฟ ROC แสดงว่าโมเดล SVM ที่ผ่าน GridSearchCV ทำงานดีกว่าแบบไม่ทำ GridSearchCV เพราะมีเส้นโค้งสูงกว่าและแยกกลุ่มเปลี่ยนงานได้แม่นยำกว่าอย่างชัดเจน โดยเฉพาะช่วง FPR ต่ำ ๆ 
+ซึ่งเป็นช่วงสำคัญในการทำนายความเสี่ยงผิดพลาดต่ำ ทั้งสองโมเดลทำได้ดี แต่การทำ GridSearchCV ช่วยให้โมเดลมีประสิทธิภาพและความน่าเชื่อถือสูงกว่าอย่างเห็นได้ชัด
 
 
 ---
@@ -481,8 +535,8 @@ y_prob_nb_no_cv = nb_no_cv.predict_proba(X_test_scaled)[:,1]
 
 ### with GridSearchCV
 ```python
-from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import GridSearchCV
 param_grid = {
     'var_smoothing':[1e-12,1e-11,1e-10,1e-9,1e-8,1e-7,1e-6,1e-5]}
 nb_cv = GridSearchCV(
@@ -496,6 +550,40 @@ y_prob_nb_cv = nb_cv.predict_proba(X_test_scaled)[:,1]
 ```
 
 ### 📊 Model Evaluation Report — Naive Bayes
+### 📜 1) Classification Report (No GridSearchCV vs GridSearchCV)
+
+| Label            | ✅ Precision | ✅ Precision (GS) | 🔍 Recall | 🔍 Recall (GS) | ⚖️ F1-Score | ⚖️ F1-Score (GS) | 💾 Support |
+|------------------|-------------------|----------------|----------------|-------------|------------------|---------------|---------|
+| ไม่เปลี่ยนงาน    | 0.84              | **0.84**           | 0.84           | **0.84**        | 0.84             | **0.84**          | 2880    |
+| เปลี่ยนงาน       | 0.52              | **0.52**           | 0.52           | **0.52**        | 0.52             | **0.52**          | 952     |
+| **Accuracy**     | —                 | —              | —              | —           | **0.76**         | **0.76**      | 3832    |
+| **Macro Avg**    | 0.68              | **0.68**           | 0.68           | **0.68**        | 0.68             | **0.68**          | 3832    |
+| **Weighted Avg** | 0.76              | **0.76**           | 0.76           | **0.76**        | 0.76             | **0.76**          | 3832    |
+
+#### 📝 2) การแปลผลของค่าสถิติต่าง ๆ
+พบว่าโมเดล SVM แบบ ใช้ Cross Validation ให้ผลดีกว่า แบบ ไม่ใช้ GridSearchCV
+- Accuracy = 0.75 ใช้เพื่ออ้างอิงเบื้องต้นเท่านั้น เนื่องจาก Accuracy ไม่ได้สะท้อนประสิทธิภาพจริงสำหรับข้อมูล Imbalanced เพราะโมเดลสามารถ “เดาคลาสมากที่สุด” แล้วได้คะแนนสูง โดยไม่จำเป็นต้องทายคลาส 1 ได้
+- Precision
+  - Class 0 (0.90) → โมเดลมั่นใจมากเมื่อตัดสินว่า “ไม่เปลี่ยนงาน”
+  - Class 1 (0.49) → มี False Positive ค่อนข้างสูง แปลว่า “มีหลายครั้งที่โมเดลทำนายว่าพนักงานจะลาออก แต่จริง ๆ ไม่ได้ลาออก”
+  - อย่างไรก็ตาม False Positive ไม่ได้มีผลเสียมากนักสำหรับงาน HR เพราะเป็นเพียงการเฝ้าติดตามเพิ่มเติม
+- Recall  Class 1 = 0.76 หมายถึงโมเดลสามารถตรวจจับพนักงานที่กำลังจะลาออกได้ 76%
+- F1‑Score ให้ภาพรวมความสมดุลระหว่าง Precision และ Recall Class 1 มี F1 = 0.60 ซึ่งใกล้เคียงความเหมาะสมสำหรับข้อมูลประเภท HR ที่มีความแปรปรวนสูง สามารถใช้ดูผลประกอบใช้ประกอบ แต่ไม่ใช่ตัวชี้ขาด
+
+#### 🔢 3) Confusion Matrix Interpretation
+
+![Confusion Matrix](Material/CM-NB.png)
+
+- True Positive (726) โมเดลสามารถจับ “คนที่จะลาออกจริง” ได้ จำนวนมากพอสมควร
+- False Negative (226) คือ คนที่จะลาออกจริง แต่โมเดลบอกว่าไม่ลาออก
+- False Positive (747) โมเดลคิดว่าคนจะลาออก แต่จริงๆ ไม่ลาออก ยังถือว่ายอมรับได้ เพราะไม่ส่งผลเสียจริง
+
+#### 📈 4) ROC Curve และภาพรวมคุณภาพโมเดล
+
+![Confusion Matrix](Material/ROC-NB.png)
+
+กราฟ ROC แสดงว่าโมเดล SVM ที่ผ่าน GridSearchCV ทำงานดีกว่าแบบไม่ทำ GridSearchCV เพราะมีเส้นโค้งสูงกว่าและแยกกลุ่มเปลี่ยนงานได้แม่นยำกว่าอย่างชัดเจน โดยเฉพาะช่วง FPR ต่ำ ๆ 
+ซึ่งเป็นช่วงสำคัญในการทำนายความเสี่ยงผิดพลาดต่ำ ทั้งสองโมเดลทำได้ดี แต่การทำ GridSearchCV ช่วยให้โมเดลมีประสิทธิภาพและความน่าเชื่อถือสูงกว่าอย่างเห็นได้ชัด
 
 
 ---
