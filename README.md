@@ -314,7 +314,7 @@ y_prob = model.predict_proba(X_test_scaled)[:,1]
 
 #### 🔢 3) Confusion Matrix Interpretation
 
-![Confusion Matrix](Material/CM-LR.jpg)
+![Confusion Matrix](Material/CM-LR.png)
 
 - True Negative (2069) โมเดลทำนายพนักงานที่ไม่ลาออกได้ถูกต้องจำนวนมาก
 - True Positive (672) โมเดลสามารถจับพนักงานที่ลาออกจริงได้ในระดับที่น่าพอใจ
